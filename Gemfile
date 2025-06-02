@@ -8,6 +8,12 @@ gem "propshaft"
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
+# Use opentelemetry for instrumentation
+gem "opentelemetry-sdk", ">= 1.0"
+# Use otlp exporter for otel instrumentation
+gem 'opentelemetry-exporter-otlp'
+# Use all auto instrumentation for otel
+gem 'opentelemetry-instrumentation-all'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
