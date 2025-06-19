@@ -1,14 +1,2 @@
-bin
-db
-lib
-!bin/rails
-!bin/bundle
-script
-storage
-test
-tmp
-vendor
-.gitattributes
-.gitignore
-Dockerfile
-README.md
+   public
+   vendor

@@ -1,29 +1,40 @@
+
+# Dockerfile for Rails Application
 FROM ruby:3.4.4
 
+# Set environment variables
 ENV RAILS_ENV=production
-ENV SECRET_KEY_BASE=7d54299f-cd61-4b2a-90b1-e241ed6d8956
+ENV BUNDLE_APP_CONFIG="/usr/local/bundle"
 
+# Install dependencies
+RUN apt-get update -qq && apt-get install -y \
+  build-essential \
+  libpq-dev \
+  nodejs \
+  sqlite3 \
+  npm
+
+# Install Yarn
+RUN npm install -g yarn
+
+# Set working directory
 WORKDIR /app
 
-RUN apt-get update -qq && apt-get install -y \
-    build-essential \
-    nodejs \
-    yarn \
-    libsqlite3-dev \
-    && apt-get clean
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
 
-COPY Gemfile Gemfile.lock ./
+# Install gems
+RUN bundle install --without development test
 
-RUN gem install bundler -v 2.6.7 && bundle install --deployment --without development
+# Copy application code
+COPY . /app
 
-COPY . .
-
+# Precompile Rails assets
 RUN bundle exec rails assets:precompile
 
-RUN bundle exec rails db:migrate
-
-# Expose port the app runs on
+# Expose Puma port
 EXPOSE 3000
 
-# Command to run the application
+# Start the Rails server
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

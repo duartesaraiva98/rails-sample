@@ -372,6 +372,7 @@ GEM
       opentelemetry-semantic_conventions
     opentelemetry-semantic_conventions (1.11.0)
       opentelemetry-api (~> 1.0)
+    pg (1.5.9)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -477,6 +478,7 @@ DEPENDENCIES
   opentelemetry-exporter-otlp
   opentelemetry-instrumentation-all
   opentelemetry-sdk (>= 1.0)
+  pg
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
