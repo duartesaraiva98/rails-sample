@@ -14,6 +14,9 @@ gem "opentelemetry-sdk", ">= 1.0"
 gem 'opentelemetry-exporter-otlp'
 # Use all auto instrumentation for otel
 gem 'opentelemetry-instrumentation-all'
+gem "sentry-ruby"
+gem "sentry-rails"
+gem "sentry-opentelemetry"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]

@@ -5,7 +5,7 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    OtelTracer.in_span("PostsController#index") do |span|
+    OtelTracer.in_span("internal#PostsController#index") do |span|
       @posts = Post.all
 
       span.add_attributes({ "nl.zorgdomein.boards.posts.count" => @posts.count })
@@ -27,7 +27,7 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
-    OtelTracer.in_span("PostsController#create") do |span|
+    OtelTracer.in_span("internal#PostsController#create") do |span|
       @post = Post.new(post_params)
 
       if @post.save
@@ -35,7 +35,8 @@ class PostsController < ApplicationController
         span.add_event("Post saved successfully")
         redirect_to @post, notice: "Post was successfully created."
       else
-        set_otel_error(span, "save")
+        exception_in_span("Post save failed" + @post.errors.full_messages.join(", "))
+
         render :new, status: :unprocessable_entity
       end
     end
@@ -43,12 +44,13 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1
   def update
-    OtelTracer.in_span("PostsController#update", attributes: { "nl.zorgdomein.boards.post.id" => @post.id }) do |span|
+    OtelTracer.in_span("internal#PostsController#update", attributes: { "nl.zorgdomein.boards.post.id" => @post.id }) do |span|
       if @post.update(post_params)
         span.add_event("Post updated successfully")
         redirect_to @post, notice: "Post was successfully updated.", status: :see_other
       else
-        set_otel_error(span, "update")
+        exception_in_span(StandardError.new("Post update failed" + @post.errors.full_messages.join(", ")))
+
         render :edit, status: :unprocessable_entity
       end
     end
@@ -56,7 +58,7 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1
   def destroy
-    OtelTracer.in_span("PostsController#destroy", attributes: { "nl.zorgdomein.boards.post.id" => @post.id }) do |span|
+    OtelTracer.in_span("internal#PostsController#destroy", attributes: { "nl.zorgdomein.boards.post.id" => @post.id }) do |span|
       @post.destroy!
       redirect_to posts_path, notice: "Post was successfully destroyed.", status: :see_other
     end
@@ -74,7 +76,4 @@ class PostsController < ApplicationController
     params.expect(post: [:name, :title, :content])
   end
 
-  def set_otel_error(span, action)
-    span.status = OpenTelemetry::Trace::Status.error("Post #{action} failed" + @post.errors.full_messages.join(", "))
-  end
 end
