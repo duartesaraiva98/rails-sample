@@ -15,4 +15,4 @@ end
 
 OpenTelemetry.propagation = Sentry::OpenTelemetry::Propagator.new
 
-OtelTracer = OpenTelemetry.tracer_provider.tracer('nl.zorgdomein')
+OtelTracer = OpenTelemetry.tracer_provider.tracer('com.simple.tracer')
