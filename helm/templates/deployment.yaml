@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: rails-sample
-          image: "rails-sample:{{ .Chart.AppVersion }}"
+          image: "ghcr.io/duartesaraiva98/rails-sample:{{ .Chart.AppVersion }}"
           ports:
           - containerPort: 3000
           env:
