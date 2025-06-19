@@ -1,10 +1,9 @@
-# Use official Ruby image as base
 FROM ruby:3.4.4
 
-# Set working directory in container
+ENV RAILS_ENV=production
+
 WORKDIR /app
 
-# Install dependencies
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
     nodejs \
@@ -12,17 +11,15 @@ RUN apt-get update -qq && apt-get install -y \
     libsqlite3-dev \
     && apt-get clean
 
-# Copy Gemfile and Gemfile.lock
 COPY Gemfile Gemfile.lock ./
 
-# Install gems
-RUN gem install bundler -v 2.6.7 && bundle install
+RUN gem install bundler -v 2.6.7 && bundle install --deployment --without development
 
-# Copy application code
 COPY . .
 
-# Precompile assets (optional for production builds)
-RUN RAILS_ENV=production bundle exec rails assets:precompile
+RUN bundle exec rails assets:precompile
+
+RUN bundle exec rails db:migrate
 
 # Expose port the app runs on
 EXPOSE 3000
