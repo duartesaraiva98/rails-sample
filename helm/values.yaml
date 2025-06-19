@@ -1,19 +1,6 @@
-extraEnv:
-  - name: DB_HOST
-    value: postgresql
+extraEnv: []
 
 ingress:
   annotations: {}
   host: ""
 
-
-postgresql:
-  global:
-    postgresql:
-      fullnameOverride: postgresql
-  enabled: true
-  postgresqlPassword: "postgres"
-  username: "test"
-  database: "test"
-  password: "test"
-  postgresqlPort: 5432
