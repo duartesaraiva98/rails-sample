@@ -34,3 +34,8 @@
 /config/master.key
 
 vendor
+
+helm/charts
+helm/Chart.lock
+
+rails-sample-*
