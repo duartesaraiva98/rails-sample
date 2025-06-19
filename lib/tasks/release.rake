@@ -40,6 +40,9 @@ namespace :release do
     chart_package = "rails-sample-#{helm_version}.tgz"
     sh "helm push #{chart_package} oci://#{registry_name}" # Replace with your Helm repository on GHCR
 
+    # Step 6: Delete the packaged Helm chart file
+    File.delete(chart_package) if File.exist?(chart_package)
+
     sh 'git add helm/Chart.yaml && git commit -m "Update helm versions" && git push origin HEAD'
   end
 end
