@@ -3,5 +3,5 @@ apiVersion: v2
 name: rails-sample
 description: A sample rails app to test opentelemetry
 type: application
-version: 0.8.1
+version: 0.8.2
 appVersion: 0.6.0
