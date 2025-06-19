@@ -22,5 +22,8 @@ class JsonLoggerFormatter
   end
 end
 
-Rails.logger.formatter = JsonLoggerFormatter.new
+logger = Logger.new(STDOUT)
+logger.formatter = JsonLoggerFormatter.new
+
+Rails.logger = ActiveSupport::TaggedLogging.new(logger)
 Rails.logger.level = Logger::DEBUG
