@@ -22,6 +22,24 @@ spec:
           image: "ghcr.io/duartesaraiva98/rails-sample:{{ .Chart.AppVersion }}"
           ports:
           - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /up
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /up
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /up
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
           env:
           - name: RAILS_ENV
             value: "production"
