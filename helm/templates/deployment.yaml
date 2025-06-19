@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails-sample
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: rails-sample
+    zorgdomein.nl/logtype: component
+#    fluentbit.io/parser: json
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rails-sample
+  template:
+    metadata:
+      labels:
+        app: rails-sample
+    spec:
+      containers:
+        - name: rails-sample
+          image: "ghcr.io/duartesaraiva98/rails-sample:{{ .Chart.AppVersion }}"
+          ports:
+          - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /up
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /up
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /up
+              port: 3000
+            failureThreshold: 30
+            periodSeconds: 10
+          env:
+          - name: RAILS_ENV
+            value: "production"
+{{- with .Values.extraEnv }}
+          {{- toYaml . | nindent 10 }}
+{{- end }}
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "1000m"

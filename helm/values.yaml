@@ -1,0 +1,6 @@
+extraEnv: []
+
+ingress:
+  annotations: {}
+  host: ""
+
