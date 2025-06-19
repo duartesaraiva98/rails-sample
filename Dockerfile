@@ -1,6 +1,7 @@
 FROM ruby:3.4.4
 
 ENV RAILS_ENV=production
+ENV SECRET_KEY_BASE=7d54299f-cd61-4b2a-90b1-e241ed6d8956
 
 WORKDIR /app
 

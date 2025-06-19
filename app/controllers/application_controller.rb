@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     current_span = OpenTelemetry::Trace.current_span
     current_span.status = OpenTelemetry::Trace::Status.error(e.message)
     current_span.record_exception(e)
-    Rails.logger.error(e)
+    # Rails.logger.error(e)
     Sentry.capture_exception(e)
   end
 end
