@@ -1,4 +1,6 @@
 # Rakefile
+require 'yaml'
+
 
 namespace :release do
   desc "Build Docker image, package Helm chart, and push to GHCR"
@@ -13,36 +15,34 @@ namespace :release do
     registry_name = "ghcr.io/duartesaraiva98/rails-sample"
     helm_chart_dir = "helm"
     helm_chart_file = "#{helm_chart_dir}/Chart.yaml"
+    helm_chart_package = "rails-sample-#{helm_version}.tgz"
 
-    # Step 1: Build Docker image
-    sh "docker buildx build --platform linux/amd64 -t #{registry_name}:#{app_version} ."
+    # Load the YAML file into a Ruby object
+    helm_chart = YAML.load_file(helm_chart_file)
 
-    # Step 2: Push Docker image to GHCR
-    sh "docker push #{registry_name}:#{app_version}"
+    is_release_docker = helm_chart["appVersion"] != app_version
+    is_release_helm = helm_chart["version"] != helm_version
 
-    # Step 3: Update Helm/Chart.yaml with new versions
-    new_content = []
-    File.readlines(helm_chart_file).each do |line|
-      if line.start_with?("version:")
-        new_content << "version: #{helm_version}\n"
-      elsif line.start_with?("appVersion:")
-        new_content << "appVersion: #{app_version}\n"
-      else
-        new_content << line
-      end
+    if is_release_docker
+      sh "docker buildx build --platform linux/amd64 -t #{registry_name}:#{app_version} ."
+      sh "docker push #{registry_name}:#{app_version}"
+
+      helm_chart["appVersion"] = app_version
     end
-    File.write(helm_chart_file, new_content.join)
 
-    # Step 4: Package Helm chart
-    sh "helm package #{helm_chart_dir}"
+    if is_release_helm
+      sh "helm package #{helm_chart_dir} --app-version #{app_version} --version #{helm_version}"
+      sh "helm push #{helm_chart_package} oci://#{registry_name}" # Replace with your Helm repository on GHCR
 
-    # Step 5: Push Helm chart to GHCR
-    chart_package = "rails-sample-#{helm_version}.tgz"
-    sh "helm push #{chart_package} oci://#{registry_name}" # Replace with your Helm repository on GHCR
+      File.delete(helm_chart_package) if File.exist?(helm_chart_package)
 
-    # Step 6: Delete the packaged Helm chart file
-    File.delete(chart_package) if File.exist?(chart_package)
+      helm_chart["version"] = helm_version
+    end
 
-    sh 'git add helm/Chart.yaml && git commit -m "Update helm versions" && git push origin HEAD'
+    if is_release_docker || is_release_helm
+      File.write(helm_chart_file, helm_chart.to_yaml)
+
+      sh 'git add helm/Chart.yaml && git commit -m "Update helm chart version(s)" && git push origin HEAD'
+    end
   end
 end
