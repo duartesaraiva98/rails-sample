@@ -8,6 +8,8 @@ metadata:
 spec:
   selector:
     app: rails-sample
+    version: {{ .Chart.Version }}
+    zorgdomein.nl/logtype: component
   ports:
     - protocol: TCP
       port: 3000

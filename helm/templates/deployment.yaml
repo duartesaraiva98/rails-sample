@@ -5,6 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     app: rails-sample
+    version: {{ .Chart.Version }}
     zorgdomein.nl/logtype: component
 #    fluentbit.io/parser: json
 spec:
@@ -16,6 +17,8 @@ spec:
     metadata:
       labels:
         app: rails-sample
+        version: {{ .Chart.Version }}
+        zorgdomein.nl/logtype: component
     spec:
       containers:
         - name: rails-sample
