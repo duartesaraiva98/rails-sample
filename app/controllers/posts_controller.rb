@@ -9,20 +9,25 @@ class PostsController < ApplicationController
       @posts = Post.all
 
       span.add_attributes({ "nl.zorgdomein.boards.posts.count" => @posts.count })
+
+      Rails.logger.debug("Index all posts")
     end
   end
 
   # GET /posts/1
   def show
+    Rails.logger.debug("Show post " + @post.id.to_s)
   end
 
   # GET /posts/new
   def new
     @post = Post.new
+    Rails.logger.debug("New post page accessed")
   end
 
   # GET /posts/1/edit
   def edit
+    Rails.logger.debug("Editing post " + @post.id.to_s)
   end
 
   # POST /posts
@@ -30,9 +35,12 @@ class PostsController < ApplicationController
     OtelTracer.in_span("internal#PostsController#create") do |span|
       @post = Post.new(post_params)
 
+      Rails.logger.debug("Creating post")
+
       if @post.save
         span.add_attributes({ "nl.zorgdomein.boards.post.id" => @post.id })
         span.add_event("Post saved successfully")
+        Rails.logger.debug("Post created successfully " + @post.id.to_s)
         redirect_to @post, notice: "Post was successfully created."
       else
         exception_in_span("Post save failed" + @post.errors.full_messages.join(", "))
@@ -45,8 +53,12 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1
   def update
     OtelTracer.in_span("internal#PostsController#update", attributes: { "nl.zorgdomein.boards.post.id" => @post.id }) do |span|
+
+      Rails.logger.debug("Updating post")
+
       if @post.update(post_params)
         span.add_event("Post updated successfully")
+        Rails.logger.debug("Post updated successfully " + @post.id.to_s)
         redirect_to @post, notice: "Post was successfully updated.", status: :see_other
       else
         exception_in_span(StandardError.new("Post update failed" + @post.errors.full_messages.join(", ")))
@@ -59,6 +71,7 @@ class PostsController < ApplicationController
   # DELETE /posts/1
   def destroy
     OtelTracer.in_span("internal#PostsController#destroy", attributes: { "nl.zorgdomein.boards.post.id" => @post.id }) do |span|
+      Rails.logger.info("Destroying post " + @post.id.to_s)
       @post.destroy!
       redirect_to posts_path, notice: "Post was successfully destroyed.", status: :see_other
     end
