@@ -16,6 +16,15 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+# Use opentelemetry for instrumentation
+gem "opentelemetry-sdk", ">= 1.0"
+# Use otlp exporter for otel instrumentation
+gem 'opentelemetry-exporter-otlp'
+# Use all auto instrumentation for otel
+gem 'opentelemetry-instrumentation-all'
+gem "sentry-ruby"
+gem "sentry-rails"
+gem "sentry-opentelemetry"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"

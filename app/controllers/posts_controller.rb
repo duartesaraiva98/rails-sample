@@ -37,7 +37,7 @@ class PostsController < ApplicationController
         format.html { redirect_to @post, notice: "Post was successfully created." }
         format.json { render :show, status: :created, location: @post }
       else
-        Rails.logger.error StandardError.new("Post creation failed: #{@post.errors.full_messages.join(", ")}")
+        exception_in_span StandardError.new("Post creation failed: #{@post.errors.full_messages.join(", ")}")
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
@@ -53,7 +53,7 @@ class PostsController < ApplicationController
         format.html { redirect_to @post, notice: "Post was successfully updated." }
         format.json { render :show, status: :ok, location: @post }
       else
-        Rails.logger.error StandardError.new("Post update failed: #{@post.errors.full_messages.join(", ")}")
+        exception_in_span StandardError.new("Post update failed: #{@post.errors.full_messages.join(", ")}")
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
