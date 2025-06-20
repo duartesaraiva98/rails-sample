@@ -25,6 +25,7 @@ module RailsSample
     # config.eager_load_paths << Rails.root.join("extras")
     config.rails_semantic_logger.add_file_appender = false
     config.semantic_logger.add_appender(io: $stdout, formatter: :json)
+    config.semantic_logger.application = "rails-sample"
     config.rails_semantic_logger.quiet_assets = true
     config.rails_semantic_logger.started = false
     config.rails_semantic_logger.processing = false
