@@ -1,5 +1,5 @@
-require 'json'
-require 'logger'
+require "json"
+require "logger"
 
 class JsonLoggerFormatter
   def call(severity, time, progname, msg)
@@ -26,4 +26,4 @@ logger = Logger.new(STDOUT)
 logger.formatter = JsonLoggerFormatter.new
 
 Rails.logger = ActiveSupport::TaggedLogging.new(logger)
-Rails.logger.level = Logger::DEBUG
+Rails.logger.level = ENV["LOG_LEVEL"] || Logger::INFO
