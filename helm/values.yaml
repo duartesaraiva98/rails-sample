@@ -1,3 +1,5 @@
+replicas: 1
+
 extraEnv: []
 
 ingress:
