@@ -7,7 +7,6 @@ OpenTelemetry::SDK.configure do |c|
 
   c.service_name = "rails-sample"
   c.use_all
-  c.logger = ActiveSupport::Logger.new(JsonLogger.logger)
   c.add_span_processor(Sentry::OpenTelemetry::SpanProcessor.instance)
   c.add_span_processor(OpenTelemetry::SDK::Trace::Export::SimpleSpanProcessor.new(exporter))
 end

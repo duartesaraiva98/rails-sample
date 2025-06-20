@@ -23,5 +23,15 @@ module RailsSample
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.rails_semantic_logger.add_file_appender = false
+    config.semantic_logger.add_appender(io: $stdout, formatter: :json)
+    config.rails_semantic_logger.quiet_assets = true
+    config.rails_semantic_logger.started = false
+    config.rails_semantic_logger.processing = false
+    config.rails_semantic_logger.rendered = false
+
+    if ENV["LOG_LEVEL"].present?
+      config.log_level = ENV["LOG_LEVEL"].downcase.strip.to_sym
+    end
   end
 end
