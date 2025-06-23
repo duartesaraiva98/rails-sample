@@ -8,7 +8,7 @@ OpenTelemetry::SDK.configure do |c|
   c.service_name = "rails-sample"
   c.use_all
   c.add_span_processor(Sentry::OpenTelemetry::SpanProcessor.instance)
-  c.add_span_processor(OpenTelemetry::SDK::Trace::Export::SimpleSpanProcessor.new(exporter))
+  c.add_span_processor(OpenTelemetry::SDK::Trace::Export::BatchSpanProcessor.new(exporter))
 end
 
 OpenTelemetry.propagation = Sentry::OpenTelemetry::Propagator.new
