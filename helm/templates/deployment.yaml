@@ -47,6 +47,8 @@ spec:
           env:
           - name: RAILS_ENV
             value: "production"
+          - name: APP_NAME
+            value: {{ .Chart.Name }}
 {{- with .Values.extraEnv }}
           {{- toYaml . | nindent 10 }}
 {{- end }}
