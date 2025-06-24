@@ -39,11 +39,16 @@ class PostsController < ApplicationController
         format.html { redirect_to @post, notice: "Post was successfully created." }
         format.json { render :show, status: :created, location: @post }
       else
-        exception_in_span logger, StandardError.new("Post creation failed: #{@post.errors.full_messages.join(", ")}")
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
+
+    unless @post.errors.empty?
+      raise StandardError.new("Post creation failed: #{@post.errors.full_messages.join(", ")}")
+    end
+  rescue StandardError => e
+    exception_in_span logger, e
   end
 
   # PATCH/PUT /posts/1 or /posts/1.json
@@ -55,11 +60,16 @@ class PostsController < ApplicationController
         format.html { redirect_to @post, notice: "Post was successfully updated." }
         format.json { render :show, status: :ok, location: @post }
       else
-        exception_in_span logger, StandardError.new("Post update failed: #{@post.errors.full_messages.join(", ")}")
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
+
+    unless @post.errors.empty?
+      raise StandardError.new("Post update failed: #{@post.errors.full_messages.join(", ")}")
+    end
+  rescue StandardError => e
+    exception_in_span logger, e
   end
 
   # DELETE /posts/1 or /posts/1.json
