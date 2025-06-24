@@ -42,9 +42,5 @@ module RailsSample
         span_context&.span_id&.unpack1("H*")
       }
     }
-
-    if ENV["LOG_LEVEL"].present?
-      config.log_level = ENV["LOG_LEVEL"].downcase.strip.to_sym
-    end
   end
 end
