@@ -32,12 +32,14 @@ module RailsSample
     config.rails_semantic_logger.rendered = false
     config.log_tags = {
       trace_id: ->(_req) {
-        ctx = OpenTelemetry::Trace.current_span.context
-        ctx.valid? ? ctx.trace_id.unpack1("H*") : nil
+        current_span = OpenTelemetry::Trace.current_span
+        span_context = current_span.context unless current_span == OpenTelemetry::Trace::Span::INVALID
+        span_context&.trace_id&.unpack1("H*")
       },
       span_id: ->(_req) {
-        ctx = OpenTelemetry::Trace.current_span.context
-        ctx.valid? ? ctx.span_id.unpack1("H*") : nil
+        current_span = OpenTelemetry::Trace.current_span
+        span_context = current_span.context unless current_span == OpenTelemetry::Trace::Span::INVALID
+        span_context&.span_id&.unpack1("H*")
       }
     }
 
