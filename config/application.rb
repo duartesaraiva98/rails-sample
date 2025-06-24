@@ -25,11 +25,21 @@ module RailsSample
     # config.eager_load_paths << Rails.root.join("extras")
     config.rails_semantic_logger.add_file_appender = false
     config.semantic_logger.add_appender(io: $stdout, formatter: :json)
-    config.semantic_logger.application = "rails-sample"
+    config.semantic_logger.application = ENV["APP_NAME"]
     config.rails_semantic_logger.quiet_assets = true
     config.rails_semantic_logger.started = false
     config.rails_semantic_logger.processing = false
     config.rails_semantic_logger.rendered = false
+    config.log_tags = {
+      trace_id: ->(_req) {
+        ctx = OpenTelemetry::Trace.current_span.context
+        ctx.valid? ? ctx.trace_id.unpack1("H*") : nil
+      },
+      span_id: ->(_req) {
+        ctx = OpenTelemetry::Trace.current_span.context
+        ctx.valid? ? ctx.span_id.unpack1("H*") : nil
+      }
+    }
 
     if ENV["LOG_LEVEL"].present?
       config.log_level = ENV["LOG_LEVEL"].downcase.strip.to_sym

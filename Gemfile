@@ -17,11 +17,11 @@ gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use opentelemetry for instrumentation
-gem "opentelemetry-sdk"
+gem "opentelemetry-sdk", ">= 1.0"
 # Use otlp exporter for otel instrumentation
-gem 'opentelemetry-exporter-otlp'
+gem "opentelemetry-exporter-otlp"
 # Use all auto instrumentation for otel
-gem 'opentelemetry-instrumentation-all'
+gem "opentelemetry-instrumentation-all"
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "sentry-opentelemetry"

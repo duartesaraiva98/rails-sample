@@ -5,7 +5,7 @@ require "opentelemetry-exporter-otlp"
 OpenTelemetry::SDK.configure do |c|
   exporter = OpenTelemetry::Exporter::OTLP::Exporter.new
 
-  c.service_name = "rails-sample"
+  c.service_name = ENV["APP_NAME"]
   c.use_all
   c.add_span_processor(Sentry::OpenTelemetry::SpanProcessor.instance)
   c.add_span_processor(OpenTelemetry::SDK::Trace::Export::BatchSpanProcessor.new(exporter))
