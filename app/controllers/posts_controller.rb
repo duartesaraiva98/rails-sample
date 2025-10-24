@@ -1,16 +1,18 @@
 require "opentelemetry/sdk"
+require "semantic_logger"
 
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
+  include SemanticLogger::Loggable
 
   # GET /posts
   def index
-    OtelTracer.in_span("internal#PostsController#index") do |span|
-      @posts = Post.all
+    SemanticLogger.tagged("HERE") do
+    @posts = Post.all
 
-      span.add_attributes({ "nl.zorgdomein.boards.posts.count" => @posts.count })
+    binding.pry
 
-      # Rails.logger.debug("Index all posts")
+    logger.info("Index all posts")
     end
   end
 
@@ -88,5 +90,4 @@ class PostsController < ApplicationController
   def post_params
     params.expect(post: [:name, :title, :content])
   end
-
 end

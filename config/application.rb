@@ -38,5 +38,8 @@ module RubyOtelMinimal
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    config.rails_semantic_logger.add_file_appender = false
+    config.semantic_logger.add_appender(io: $stdout, formatter: :json)
+    config.log_level = :info
   end
 end
